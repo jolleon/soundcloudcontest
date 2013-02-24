@@ -1,0 +1,13 @@
+{% extends 'contest/base.html' %}
+{% load url from future %}
+
+{% block content %}
+<div class="hero-unit">
+<h2>{{ contest.title }}</h2>
+<p>{{ contest.description }}</p>
+</div>
+
+{% block submissions %}
+{% endblock submissions %}
+
+{% endblock content %}

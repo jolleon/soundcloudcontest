@@ -62,6 +62,12 @@ STATIC_ROOT = 'static/'
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
 
+# URL for login - handles both GET (login form display) and POST
+LOGIN_URL = '/login'
+
+# where user is redirected after login when next page is not specified
+LOGIN_REDIRECT_URL = '/'
+
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".

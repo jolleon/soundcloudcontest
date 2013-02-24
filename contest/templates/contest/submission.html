@@ -1,0 +1,36 @@
+{% extends 'contest/contest.html' %}
+{% load url from future %}
+
+{% block submissions %}
+
+{% if form %}
+    {% if success %}
+        <h3>Entry submitted sucessfuly! Please verify the preview below.</h3>
+    {% elif submission %}
+        <h3>You already have an entry!</h3>
+    {% else %}
+        <h3>Submit your entry!</h3>
+    {% endif %}
+    <form method="post" action="{% url 'contest' contest.id %}" class="form-inline">
+        {% if form.errors %}
+            {% for error in form.sc_url.errors %}
+                <p class="text-error">{{ error }}</p>
+            {% endfor %}
+        {% endif %}
+        {% csrf_token %}
+        <input type="text" name="{{ form.sc_url.html_name }}" class="input-large span8" placeholder="https://soundcloud.com/..."
+            {% if submission %}value="{{ submission.sc_url }}"{% endif %}>
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </form>
+{% endif %}
+{% if submission %}
+        <div>
+            <object height="18" width="100%">
+                <param name="movie" value="http://player.soundcloud.com/player.swf?url={{ submission.sc_url }}&amp;auto_play=false&amp;player_type=tiny&amp;font=Arial&amp;color=0055cc">
+                <param name="allowscriptaccess" value="always">
+            </object>
+        </div>
+{% endif %}
+
+{% endblock submissions %}
+
