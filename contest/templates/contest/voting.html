@@ -1,0 +1,16 @@
+{% extends 'contest/contest.html' %}
+{% load url from future %}
+
+{% block submissions %}
+
+{% for submission in submissions %}
+        <div>
+            <object height="18" width="100%">
+                <param name="movie" value="http://player.soundcloud.com/player.swf?url={{ submission.sc_url }}&amp;auto_play=false&amp;player_type=tiny&amp;font=Arial&amp;color=0055cc">
+                <param name="allowscriptaccess" value="always">
+            </object>
+        </div>
+{% endfor %}
+
+{% endblock submissions %}
+

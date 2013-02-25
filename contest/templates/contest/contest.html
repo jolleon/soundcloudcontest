@@ -8,6 +8,7 @@
 </div>
 
 {% block submissions %}
+Please <a href="/login?next={% url 'contest' contest.id %}">login</a> if you would like to participate.
 {% endblock submissions %}
 
 {% endblock content %}

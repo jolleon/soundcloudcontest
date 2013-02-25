@@ -38,10 +38,11 @@
 
 
 <form method="post" action="{% url 'django.contrib.auth.views.login' %}" class="form-signin">
-{% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
-{% endif %}
 <h2 class="form-signin-heading">Please sign in</h2>
+Or <a href="{% url 'signin' %}">create an account</a>.
+{% if form.errors %}
+<p class="text-error">Your username and password didn't match. Please try again.</p>
+{% endif %}
 {% csrf_token %}
     <input type="text" name="{{ form.username.html_name }}" id="{{ form.username.auto_id }}" class="input-block-level" placeholder="{{ form.username.label }}">
     <input type="password" name="{{ form.password.html_name }}" id="{{ form.password.auto_id }}" class="input-block-level" placeholder="{{ form.password.label }}">
