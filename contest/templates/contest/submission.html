@@ -5,7 +5,7 @@
 
 {% if form %}
     {% if success %}
-        <h3>Entry submitted sucessfuly! Please verify the preview below.</h3>
+        <h3>Entry submitted sucessfuly!</h3>
     {% elif submission %}
         <h3>You already have an entry!</h3>
     {% else %}
@@ -25,6 +25,7 @@
 {% endif %}
 {% if submission %}
         <div>
+            <a href="{{ submission.sc_url }}">{{ submission.sc_url }}</a><br>
             <object height="18" width="100%">
                 <param name="movie" value="http://player.soundcloud.com/player.swf?url={{ submission.sc_url }}&amp;auto_play=false&amp;player_type=tiny&amp;font=Arial&amp;color=0055cc">
                 <param name="allowscriptaccess" value="always">
