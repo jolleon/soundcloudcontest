@@ -4,7 +4,9 @@
 {% block content %}
 <div class="hero-unit">
 <h2>{{ contest.title }}</h2>
+{% autoescape off %}
 <p>{{ contest.description }}</p>
+{% endautoescape %}
 </div>
 
 {% block submissions %}
