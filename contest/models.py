@@ -41,6 +41,13 @@ class Submission(models.Model):
     contest = models.ForeignKey(Contest)
     date_created = models.DateTimeField(auto_now_add=True)
 
+    # from SC
+    username = models.CharField(max_length=100, null=True, blank=True)
+    track_id = models.IntegerField(null=True, blank=True)
+    user_id = models.IntegerField(null=True, blank=True)
+    title = models.CharField(max_length=200, null=True, blank=True)
+    uri = models.URLField(null=True, blank=True)
+
 class Vote(models.Model):
     submission = models.ForeignKey(Submission)
     voter = models.ForeignKey(User)

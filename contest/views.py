@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 
+import soundcloud
 
 from forms import SubmissionForm
 from forms import UserForm
@@ -18,31 +19,38 @@ def index(request):
 
 def contest(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)
+    sc_client = soundcloud.Client(client_id='296ab7d5973f378289cc72d56dc8eded')
 
     if not request.user.is_authenticated():
         return render(request, 'contest/contest.html', {'contest': contest})
 
     submissions = Submission.objects.filter(contest=contest, author=request.user)
-    
-    submission = submissions[0] if submissions else None
+    existing_submission = submissions[0] if submissions else None
     submission_success = False
     
     if contest.is_submission_open():
         if request.method == 'POST':
-            if submission:
-                form = SubmissionForm(request.POST, instance=submission)
+            if existing_submission:
+                form = SubmissionForm(request.POST, instance=existing_submission)
             else:
                 form = SubmissionForm(request.POST)
             if form.is_valid():
                 submission = form.save(commit=False)
                 submission.author = request.user
                 submission.contest = contest
+                submission.username = form.cleaned_data['username']
+                submission.track_id = form.cleaned_data['track_id']
+                submission.user_id = form.cleaned_data['user_id']
+                submission.title = form.cleaned_data['title']
+                submission.uri = form.cleaned_data['uri']
                 submission.save()
                 submission_success = True
 
         else: #GET
             form = SubmissionForm()
 
+        submissions = Submission.objects.filter(contest=contest, author=request.user)
+        submission = submissions[0] if submissions else None
         return render(request, 'contest/submission.html', {'contest': contest, 'form': form, 'submission': submission, 'success': submission_success})
 
     else:
