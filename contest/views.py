@@ -51,13 +51,14 @@ def contest(request, contest_id):
                 # save with added fields
                 submission.save()
                 submission_success = True
+            else:
+                # get back the good one if there was one
+                submissions = Submission.objects.filter(contest=contest, author=request.user)
+                submission = submissions[0] if submissions else None
 
         else: #GET
             form = SubmissionForm()
 
-        # ugly
-        submissions = Submission.objects.filter(contest=contest, author=request.user)
-        submission = submissions[0] if submissions else None
         return render(request, 'contest/submission.html',
                 {'contest': contest,
                     'form': form,
