@@ -5,11 +5,17 @@
 {% block submissions %}
 
 {% for submission in submissions %}
-        <div>
+    <div>
+        <form method="post" action="{% url 'contest' contest.id %}"
+            class="form-inline">
+            {% csrf_token %}
             {% sc_widget submission.sc_url %}
-
-
-        </div>
+            <input type="hidden"
+                name="{{ submission.form.submission.html_name }}"
+                value="{{ submission.id }}">
+            <input type="text" name="{{ submission.form.score.html_name }}">
+        </form>
+    </div>
 {% endfor %}
 
 {% endblock submissions %}

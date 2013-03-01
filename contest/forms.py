@@ -1,6 +1,6 @@
 from django import forms
 
-from models import Submission
+from models import Submission, Vote
 from django.contrib.auth.models import User
 
 import soundcloud
@@ -48,3 +48,10 @@ class UserForm(forms.ModelForm):
                 raise forms.ValidationError("Passwords didn't match.")
 
         return cleaned_data
+
+
+class VoteForm(forms.ModelForm):
+    class Meta:
+        model = Vote
+        fields = {'submission', 'score'}
+
