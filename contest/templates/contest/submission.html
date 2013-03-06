@@ -15,7 +15,8 @@
     {% if submission %}
         <hr>
         <div>
-            <p><a href="{{ submission.sc_url }}">{{ submission.title }}</a> by {{ submission.username }}</p>
+            <p><a href="{{ submission.sc_url }}">{{ submission.title }}</a>
+            by {{ submission.username }}</p>
             {% sc_widget submission.sc_url %}
         </div>
         <hr>
@@ -31,7 +32,8 @@
             {% endfor %}
         {% endif %}
         {% csrf_token %}
-        <input type="text" name="{{ form.sc_url.html_name }}" class="input-large span8" placeholder="https://soundcloud.com/..."
+        <input type="text" name="{{ form.sc_url.html_name }}"
+            class="input-large span8" placeholder="https://soundcloud.com/..."
             {% if submission %}value="{{ submission.sc_url }}"{% endif %}>
         <button class="btn btn-primary" type="submit">{% if submission %}Update{% else %}Submit{% endif %}</button>
     </form>

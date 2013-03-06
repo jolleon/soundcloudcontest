@@ -1,0 +1,25 @@
+{% extends 'contest/contest.html' %}
+{% load url from future %}
+{% load contest_tags %}
+
+{% block submissions %}
+
+<table class="table">
+{% for submission in submissions %}
+    <tr><td>{{ forloop.counter }}
+    </td><td>
+        <p><a href="{{ submission.sc_url }}">{{ submission.title }}</a>
+        by {{ submission.username }}</p>
+            {% sc_widget submission.sc_url %}
+    </td><td>
+        <table class="table-condensed">
+            <thead><th>Avg</th><th>{{ submission.average }}</th></thead>
+            <tr><td>Votes</td><td>{{ submission.n_votes }}</td></tr>
+            <tr><td>Max</td><td>{{ submission.max }}</td></tr>
+            <tr><td>Min</td><td>{{ submission.min }}</td></tr>
+        </table>
+    </td></tr>
+{% endfor %}
+</table>
+{% endblock submissions %}
+

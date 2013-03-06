@@ -69,6 +69,6 @@ class VoteForm(forms.ModelForm):
         )
     score = forms.ChoiceField(
             choices=SCORES,
-            widget=forms.Select(attrs={'width':'40px'})
+            widget=forms.Select
         )
 

@@ -13,5 +13,5 @@ class SubmissionAdmin(admin.ModelAdmin):
 admin.site.register(Submission, SubmissionAdmin)
 
 class VoteAdmin(admin.ModelAdmin):
-    list_display = ('voter', 'submission', 'score')
+    list_display = ('voter', 'contest', 'submission', 'score')
 admin.site.register(Vote, VoteAdmin)

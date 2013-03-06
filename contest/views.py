@@ -55,7 +55,8 @@ def contest(request, contest_id):
                 submission_success = True
             else:
                 # get back the good one if there was one
-                submissions = Submission.objects.filter(contest=contest, author=request.user)
+                submissions = Submission.objects.filter(contest=contest,
+                        author=request.user)
                 submission = submissions[0] if submissions else None
 
         else: #GET
@@ -71,14 +72,21 @@ def contest(request, contest_id):
         if request.method == 'POST':
             form = VoteForm(request.POST)
             if form.is_valid():
-                vote, created = Vote.objects.get_or_create(
-                        voter=request.user,
-                        submission=form.cleaned_data['submission'],
-                        defaults={'score':form.cleaned_data['score']}
-                    )
-                if not created: # defaults have been ignored, need to override
-                    vote.score = form.cleaned_data['score']
-                    vote.save()
+                if form.cleaned_data['score'] != '0':
+                    vote, created = Vote.objects.get_or_create(
+                            voter=request.user,
+                            submission=form.cleaned_data['submission'],
+                            defaults={'score':form.cleaned_data['score']}
+                        )
+                    if not created:
+                        # defaults have been ignored, need to override
+                        vote.score = form.cleaned_data['score']
+                        vote.save()
+                else:
+                    # if there is a vote we need to delete it
+                    Vote.objects.filter(voter=request.user,
+                        submission=form.cleaned_data['submission']
+                    ).delete()
         else: #GET
             pass
         submissions = Submission.objects.filter(contest=contest)
@@ -97,9 +105,20 @@ def contest(request, contest_id):
 
     else:
         submissions = Submission.objects.filter(contest=contest)
+        for submission in submissions:
+            votes = Vote.objects.filter(submission=submission)
+            scores = [vote.score for vote in votes]
+            submission.n_votes = len(scores)
+            if scores:
+                submission.max = max(scores)
+                submission.min = min(scores)
+                submission.average = (sum(scores) * 100 / len(scores)) * 0.01
+            else:
+                submission.average = 0
 
-        return render(request, 'contest/voting.html',
-                {'contest': contest, 'submissions': submissions})
+        sorted_submissions = sorted(submissions, key=lambda s: -s.average)
+        return render(request, 'contest/results.html',
+                {'contest': contest, 'submissions': sorted_submissions})
 
 
 def signin(request):
