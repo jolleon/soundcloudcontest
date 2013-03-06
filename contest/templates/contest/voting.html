@@ -4,19 +4,23 @@
 
 {% block submissions %}
 
+<table class="table">
 {% for submission in submissions %}
-    <div>
-        <form method="post" action="{% url 'contest' contest.id %}"
-            class="form-inline">
-            {% csrf_token %}
+<tr><td>
+            <div float="left" width="80%">
             {% sc_widget submission.sc_url %}
+            </td><td>
+        <form method="post" action="{% url 'contest' contest.id %}"
+            class="form-inline vote-form">
+            {% csrf_token %}
             <input type="hidden"
                 name="{{ submission.form.submission.html_name }}"
                 value="{{ submission.id }}">
-            <input type="text" name="{{ submission.form.score.html_name }}">
+            {{ submission.form.score }}
         </form>
-    </div>
+</td></tr>
 {% endfor %}
 
+</table>
 {% endblock submissions %}
 

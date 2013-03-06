@@ -10,6 +10,7 @@ from forms import SubmissionForm, UserForm, VoteForm
 
 from contest.models import Contest
 from contest.models import Submission
+from contest.models import Vote
 
 def index(request):
     contest_list = Contest.objects.all()
@@ -27,6 +28,7 @@ def contest(request, contest_id):
         # get existing submission for user if there is one
         submissions = Submission.objects.filter(contest=contest, author=request.user)
         existing_submission = submissions[0] if submissions else None
+        submission = existing_submission
         # used for user feedback
         submission_success = False
 
@@ -67,14 +69,30 @@ def contest(request, contest_id):
 
     elif contest.is_voting_open():
         if request.method == 'POST':
-            pass
+            form = VoteForm(request.POST)
+            if form.is_valid():
+                vote, created = Vote.objects.get_or_create(
+                        voter=request.user,
+                        submission=form.cleaned_data['submission'],
+                        defaults={'score':form.cleaned_data['score']}
+                    )
+                if not created: # defaults have been ignored, need to override
+                    vote.score = form.cleaned_data['score']
+                    vote.save()
         else: #GET
-            submissions = Submission.objects.filter(contest=contest)
-            for submission in submissions:
-                submission.form = VoteForm()
+            pass
+        submissions = Submission.objects.filter(contest=contest)
+        for submission in submissions:
+            votes = Vote.objects.filter(
+                    submission=submission,
+                    voter=request.user)
+            # TODO: should probably do something if there is more than 1
+            vote = votes[0] if votes else None
+            submission.score = vote.score if vote else ''
+            submission.form = VoteForm()
+            submission.form.fields['score'].initial = submission.score
         return render(request, 'contest/voting.html',
                 {'contest': contest, 'submissions': submissions})
-
 
 
     else:

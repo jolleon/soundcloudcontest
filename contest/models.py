@@ -48,6 +48,12 @@ class Submission(models.Model):
     title = models.CharField(max_length=200, null=True, blank=True)
     uri = models.URLField(null=True, blank=True)
 
+    def __unicode__(self):
+        if self.title:
+            return self.title
+        else:
+            return self.sc_url
+
 class Vote(models.Model):
     submission = models.ForeignKey(Submission)
     voter = models.ForeignKey(User)
