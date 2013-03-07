@@ -1,0 +1,32 @@
+{% extends 'contest/base.html' %}
+{% load url from future %}
+
+{% block content %}
+<form class="contest-form row" action="{% url 'edit' contest.id %}" method="post">
+    <div class="span8">
+        <input type="text" name="{{ form.title.html_name }}"
+            value="{{ contest.title }}" placeholder="contest title">
+        <textarea name="{{ form.description.html_name }}">{{ contest.description }}</textarea>
+    </div>
+    <div class="span4">
+        <button class="btn btn-primary" type="submit">Update</button>
+        <br>
+        <br>
+        {% if contest.is_submission_open %}
+        <p>Check this if you would like to close submissions for this contest:</p>
+        <label class="checkbox">
+            <input type="checkbox"> close submissions
+        </label>
+        <p class="text-error"><i class="icon-warning-sign"></i>
+        This can not be undone</p>
+        {% elif contest.is_voting_open %}
+        <p>Check this if you would like to close voting for this contest:</p>
+        <label class="checkbox">
+            <input type="checkbox"> close voting
+        </label>
+        <p class="text-error"><i class="icon-warning-sign"></i>
+        This can not be undone</p>
+        {% endif %}
+    </div>
+</form>
+{% endblock content %}

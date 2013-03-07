@@ -6,14 +6,14 @@ from django.contrib.auth.models import User
 
 import soundcloud
 
-from forms import SubmissionForm, UserForm, VoteForm
+import forms
 
 from contest.models import Contest
 from contest.models import Submission
 from contest.models import Vote
 
 def index(request):
-    contest_list = Contest.objects.all()
+    contest_list = Contest.objects.all().order_by('-date_last_modified')
     return render(request, 'contest/index.html', {'contest_list': contest_list})
 
 
@@ -35,10 +35,10 @@ def contest(request, contest_id):
         if request.method == 'POST':
             if existing_submission:
                 # update existing submission
-                form = SubmissionForm(request.POST, instance=existing_submission)
+                form = forms.SubmissionForm(request.POST, instance=existing_submission)
             else:
                 # create new submission
-                form = SubmissionForm(request.POST)
+                form = forms.SubmissionForm(request.POST)
             if form.is_valid():
                 # save what we have in db to get a Submission object
                 submission = form.save(commit=False)
@@ -47,6 +47,7 @@ def contest(request, contest_id):
                 submission.contest = contest
                 submission.username = form.cleaned_data['username']
                 submission.track_id = form.cleaned_data['track_id']
+                submission.user_link = form.cleaned_data['user_link']
                 submission.user_id = form.cleaned_data['user_id']
                 submission.title = form.cleaned_data['title']
                 submission.uri = form.cleaned_data['uri']
@@ -60,7 +61,7 @@ def contest(request, contest_id):
                 submission = submissions[0] if submissions else None
 
         else: #GET
-            form = SubmissionForm()
+            form = forms.SubmissionForm()
 
         return render(request, 'contest/submission.html',
                 {'contest': contest,
@@ -70,7 +71,7 @@ def contest(request, contest_id):
 
     elif contest.is_voting_open():
         if request.method == 'POST':
-            form = VoteForm(request.POST)
+            form = forms.VoteForm(request.POST)
             if form.is_valid():
                 if form.cleaned_data['score'] != '0':
                     vote, created = Vote.objects.get_or_create(
@@ -97,7 +98,7 @@ def contest(request, contest_id):
             # TODO: should probably do something if there is more than 1
             vote = votes[0] if votes else None
             submission.score = vote.score if vote else ''
-            submission.form = VoteForm()
+            submission.form = forms.VoteForm()
             submission.form.fields['score'].initial = submission.score
         return render(request, 'contest/voting.html',
                 {'contest': contest, 'submissions': submissions})
@@ -123,12 +124,12 @@ def contest(request, contest_id):
 
 def signin(request):
     if request.method == 'GET':
-        form = UserForm(initial={'username': '', 'email': ''})
+        form = forms.UserForm(initial={'username': '', 'email': ''})
         form['username'].value = ''
         return render(request, 'contest/signin.html', {'form': form})
 
     if request.method == 'POST':
-        form = UserForm(request.POST)
+        form = forms.UserForm(request.POST)
         if form.is_valid():
             user = form.save()
             password = user.password
@@ -140,5 +141,25 @@ def signin(request):
             return redirect('/')
         else:
             return render(request, 'contest/signin.html', {'form': form})
-            
-        
+
+
+@login_required
+def profile(request):
+    contests = Contest.objects.filter(admin=request.user)
+    submissions = Submission.objects.filter(author=request.user)
+    votes = Vote.objects.filter(voter=request.user)
+
+    context = {
+        'contests': contests,
+        'submissions': submissions,
+        'votes': votes
+    }
+    return render(request, 'contest/profile.html', context)
+
+
+@login_required
+def edit(request, contest_id):
+    contest = get_object_or_404(Contest, pk=contest_id, admin=request.user)
+    # at this point we have the correct contest and the user is its admin
+    form = forms.ContestForm(initial={'title': contest.title, 'description': contest.description})
+    return render(request, 'contest/edit.html', {'form': form, 'contest': contest})

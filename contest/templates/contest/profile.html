@@ -1,0 +1,42 @@
+{% extends 'contest/base.html' %}
+{% load url from future %}
+
+{% block content %}
+<h3>Your Contests</h3>
+{% if contests %}
+    <table class="table table-striped table-hover">
+    <thead><tr><th>Title</th><th>Status</th></tr></thead>
+    <tbody>
+    {% for contest in contests %}
+        <tr><td><a href="{% url 'edit' contest.id %}">{{ contest.title }}</a></td><td>{{ contest.status }}</td></tr>
+    {% endfor %}
+    </tbody>
+    </table>
+{% else %}
+    You haven't created any contest.
+{% endif %}
+<div class="text-center">
+    <a href="#" class="btn btn-primary">Create a new contest!</a>
+</div>
+
+<h3>Your submissions</h3>
+{% if submissions %}
+    <table class="table table-striped table-hover">
+    <thead><tr><th>Submission</th><th>For contest</th><th>Contest status</th></tr></thead>
+    <tbody>
+    {% for submission in submissions %}
+    <tr>
+        <td><a href="{{ submission.sc_url }}">{{ submission.title }}</a></td>
+        <td><a href="{% url 'contest' submission.contest.id %}">
+                {{ submission.contest.title }}</a></td>
+        <td>{{ submission.contest.status }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+{% else %}
+    You haven't participated in any contest.
+{% endif %}
+
+
+{% endblock content %}

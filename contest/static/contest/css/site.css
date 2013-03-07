@@ -10,3 +10,20 @@ body {
 select {
     width: auto;
 }
+
+
+.contest-form .span8 * {
+    width: 98%;
+}
+
+.contest-form textarea {
+    height: 30em;
+}
+/*
+.contest-form .span8 {
+    background-color:red;
+}
+.contest-form .span4 {
+    background-color:green;
+}
+    */

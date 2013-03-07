@@ -1,6 +1,6 @@
 from django import forms
 
-from models import Submission, Vote
+from models import Contest, Submission, Vote
 from django.contrib.auth.models import User
 
 import soundcloud
@@ -26,6 +26,7 @@ class SubmissionForm(forms.ModelForm):
 
         cleaned_data['username'] = track.user['username']
         cleaned_data['track_id'] = track.id
+        cleaned_data['user_link'] = track.user['permalink_url']
         cleaned_data['user_id'] = track.user_id
         cleaned_data['title'] = track.title
         cleaned_data['uri'] = track.uri
@@ -55,20 +56,26 @@ class VoteForm(forms.ModelForm):
         model = Vote
         fields = {'submission'}
     SCORES = (
-            (0, ''),
-            (1, '1'),
-            (2, '2'),
-            (3, '3'),
-            (4, '4'),
-            (5, '5'),
-            (6, '6'),
-            (7, '7'),
-            (8, '8'),
-            (9, '9'),
-            (10, '10'),
-        )
+        (0, ''),
+        (1, '1'),
+        (2, '2'),
+        (3, '3'),
+        (4, '4'),
+        (5, '5'),
+        (6, '6'),
+        (7, '7'),
+        (8, '8'),
+        (9, '9'),
+        (10, '10'),
+    )
     score = forms.ChoiceField(
-            choices=SCORES,
-            widget=forms.Select
-        )
+        choices=SCORES,
+        widget=forms.Select
+    )
+
+
+class ContestForm(forms.ModelForm):
+    class Meta:
+        model = Contest
+        fields = {'title', 'description'}
 

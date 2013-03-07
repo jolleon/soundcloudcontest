@@ -8,6 +8,7 @@ class Contest(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_submission_closed = models.DateTimeField(null=True, blank=True)
     date_voting_closed = models.DateTimeField(null=True, blank=True) 
+    date_last_modified = models.DateTimeField(auto_now=True)
 
     admin = models.ForeignKey(User)
 
@@ -44,6 +45,7 @@ class Submission(models.Model):
     # from SC
     username = models.CharField(max_length=100, null=True, blank=True)
     track_id = models.IntegerField(null=True, blank=True)
+    user_link = models.URLField(null=True, blank=True)
     user_id = models.IntegerField(null=True, blank=True)
     title = models.CharField(max_length=200, null=True, blank=True)
     uri = models.URLField(null=True, blank=True)
