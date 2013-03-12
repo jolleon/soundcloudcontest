@@ -4,6 +4,9 @@
 {% block content %}
 <form class="contest-form row" action="{% url 'edit' contest.id %}" method="post">
     {% csrf_token %}
+    {% if form.errors %}
+            {{ form.errors }}
+    {% endif %}
     <div class="span8">
         <input type="text" name="{{ form.title.html_name }}"
             value="{{ contest.title }}" placeholder="contest title">

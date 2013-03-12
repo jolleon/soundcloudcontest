@@ -3,8 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-
-from datetime import datetime
+from django.utils import timezone
 
 import soundcloud
 
@@ -167,12 +166,12 @@ def edit(request, contest_id):
             if contest_id == '0':
                 # new contest creation
                 contest = Contest(
-                    id=contest_id,
                     admin=request.user,
                     title=form.cleaned_data['title'],
                     description=form.cleaned_data['description']
                 )
                 contest.save()
+                contest_id = contest.id
             else:
                 contest = get_object_or_404(
                         Contest,
@@ -183,22 +182,29 @@ def edit(request, contest_id):
                 contest.description = form.cleaned_data['description']
                 if form.cleaned_data['close']:
                     if contest.is_submission_open():
-                        contest.date_submission_closed = datetime.now()
+                        contest.date_submission_closed = timezone.now()
                     elif contest.is_voting_open():
-                        contest.date_voting_closed = datetime.now()
+                        contest.date_voting_closed = timezone.now()
                     else:
                         # TODO: should probably log an error or something
                         pass
                 contest.save()
+        else: # form not valid
+            if contest_id != '0': # '0' is for new contest creation
+                contest = get_object_or_404(Contest, pk=contest_id, admin=request.user)
+            else:
+                # creating new contest
+                contest = Contest(id=0)
 
 
-    if contest_id != '0': # '0' is for new contest creation
-        contest = get_object_or_404(Contest, pk=contest_id, admin=request.user)
-        # at this point we have the correct contest and the user is its admin
-        form = forms.ContestForm(initial={'title': contest.title, 'description': contest.description})
-        return render(request, 'contest/edit.html', {'form': form, 'contest': contest})
-    else:
-        # creating new contest
-        form = forms.ContestForm()
-        contest = Contest(id=0)
-        return render(request, 'contest/edit.html', {'form': form, 'contest': contest})
+    else: # GET request
+        if contest_id != '0': # '0' is for new contest creation
+            contest = get_object_or_404(Contest, pk=contest_id, admin=request.user)
+            # at this point we have the correct contest and the user is its admin
+            form = forms.ContestForm(initial={'title': contest.title, 'description': contest.description})
+        else:
+            # creating new contest
+            form = forms.ContestForm()
+            contest = Contest(id=0)
+
+    return render(request, 'contest/edit.html', {'form': form, 'contest': contest})
