@@ -13,10 +13,10 @@
             {% sc_widget submission.sc_url %}
     </td><td>
         <table class="table-condensed">
-            <thead><th>Avg</th><th>{{ submission.average }}</th></thead>
+            <thead><th>Average</th><th>{{ submission.average }}</th></thead>
             <tr><td>Votes</td><td>{{ submission.n_votes }}</td></tr>
-            <tr><td>Max</td><td>{{ submission.max }}</td></tr>
-            <tr><td>Min</td><td>{{ submission.min }}</td></tr>
+            <tr><td>High</td><td>{{ submission.max }}</td></tr>
+            <tr><td>Low</td><td>{{ submission.min }}</td></tr>
         </table>
     </td></tr>
 {% endfor %}

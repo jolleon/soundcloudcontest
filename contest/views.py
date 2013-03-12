@@ -189,6 +189,7 @@ def edit(request, contest_id):
                         # TODO: should probably log an error or something
                         pass
                 contest.save()
+            return redirect('contest', contest.id)
         else: # form not valid
             if contest_id != '0': # '0' is for new contest creation
                 contest = get_object_or_404(Contest, pk=contest_id, admin=request.user)
