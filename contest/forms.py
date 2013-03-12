@@ -78,4 +78,5 @@ class ContestForm(forms.ModelForm):
     class Meta:
         model = Contest
         fields = {'title', 'description'}
+    close = forms.BooleanField()
 

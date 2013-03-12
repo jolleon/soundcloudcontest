@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 
+from datetime import datetime
+
 import soundcloud
 
 import forms
@@ -159,7 +161,44 @@ def profile(request):
 
 @login_required
 def edit(request, contest_id):
-    contest = get_object_or_404(Contest, pk=contest_id, admin=request.user)
-    # at this point we have the correct contest and the user is its admin
-    form = forms.ContestForm(initial={'title': contest.title, 'description': contest.description})
-    return render(request, 'contest/edit.html', {'form': form, 'contest': contest})
+    if request.method == 'POST':
+        form = forms.ContestForm(request.POST)
+        if form.is_valid():
+            if contest_id == '0':
+                # new contest creation
+                contest = Contest(
+                    id=contest_id,
+                    admin=request.user,
+                    title=form.cleaned_data['title'],
+                    description=form.cleaned_data['description']
+                )
+                contest.save()
+            else:
+                contest = get_object_or_404(
+                        Contest,
+                        pk=contest_id,
+                        admin=request.user
+                    )
+                contest.title = form.cleaned_data['title']
+                contest.description = form.cleaned_data['description']
+                if form.cleaned_data['close']:
+                    if contest.is_submission_open():
+                        contest.date_submission_closed = datetime.now()
+                    elif contest.is_voting_open():
+                        contest.date_voting_closed = datetime.now()
+                    else:
+                        # TODO: should probably log an error or something
+                        pass
+                contest.save()
+
+
+    if contest_id != '0': # '0' is for new contest creation
+        contest = get_object_or_404(Contest, pk=contest_id, admin=request.user)
+        # at this point we have the correct contest and the user is its admin
+        form = forms.ContestForm(initial={'title': contest.title, 'description': contest.description})
+        return render(request, 'contest/edit.html', {'form': form, 'contest': contest})
+    else:
+        # creating new contest
+        form = forms.ContestForm()
+        contest = Contest(id=0)
+        return render(request, 'contest/edit.html', {'form': form, 'contest': contest})
