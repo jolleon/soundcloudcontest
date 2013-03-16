@@ -16,7 +16,8 @@
         <hr>
         <div>
             <p><a href="{{ submission.sc_url }}">{{ submission.title }}</a>
-            by {{ submission.username }}</p>
+            by
+            <a href="{{ submission.user_link }}">{{ submission.username }}</a></p>
             {% sc_widget submission.sc_url %}
         </div>
         <hr>

@@ -3,13 +3,15 @@
 {% load contest_tags %}
 
 {% block submissions %}
-<p>This contest is finished, the results are below.</p>
+<p>This contest is finished, results are below.</p>
 <table class="table">
 {% for submission in submissions %}
     <tr><td>{{ forloop.counter }}
     </td><td>
         <p><a href="{{ submission.sc_url }}">{{ submission.title }}</a>
-        by {{ submission.username }}</p>
+        by
+        <a href="{{ submission.user_link }}">{{ submission.username }}</a>
+        <small class="muted">(posted by {{ submission.author }})</small></p>
             {% sc_widget submission.sc_url %}
     </td><td>
         <table class="table-condensed">
