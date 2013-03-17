@@ -1,4 +1,9 @@
 {% load url from future %}
+{% load relative_date %}
 {% for contest in contest_list %}
-    <tr><td><a href="{% url 'contest' contest.id %}">{{ contest.title }}</a></td><td>{{ contest.status }}</td></tr>
+<tr>
+    <td><a href="{% url 'contest' contest.id %}">{{ contest.title }}</a></td>
+    <td>{{ contest.status }}</td>
+    <td class="text-right">{{ contest.date_last_modified|relative_date }}</td>
+</tr>
 {% endfor %}
