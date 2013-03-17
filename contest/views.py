@@ -3,12 +3,14 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from django.core import urlresolvers
 from django.utils import timezone
 
 import soundcloud
 
-import forms
+import json
 
+import forms
 from contest.models import Contest
 from contest.models import Submission
 from contest.models import Vote
@@ -17,6 +19,17 @@ def index(request):
     contest_list = Contest.objects.all().order_by('-date_last_modified')
     return render(request, 'contest/index.html', {'contest_list': contest_list})
 
+def contests(request):
+    contests = Contest.objects.all().order_by('-date_last_modified')[4:]
+    data = [{
+        'title': contest.title,
+        'id': contest.id,
+        'url': urlresolvers.reverse('contest', args=(contest.id,)),
+        'status': contest.status()
+        } for contest in contests
+    ]
+
+    return render(request, 'contest/contest_table.html', {'contest_list': contests})
 
 def contest(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)

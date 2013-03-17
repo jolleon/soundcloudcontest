@@ -4,6 +4,7 @@ from contest import views
 
 urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
+    url(r'^contests$', views.contests, name='contests'),
     url(r'^login/$', 'django.contrib.auth.views.login',
         {'template_name': 'contest/login.html'}),
     url(r'^signin/$', views.signin, name='signin'),

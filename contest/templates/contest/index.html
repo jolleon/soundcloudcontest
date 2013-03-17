@@ -3,7 +3,7 @@
 
 {% block content %}
     <h3>All Contests</h3>
-    <table class="table table-striped table-hover">
+    <table class="table table-striped table-hover contests">
     <thead><tr><th>Title</th><th>Status</th></tr></thead>
     <tbody>
     {% for contest in contest_list %}
@@ -12,4 +12,7 @@
     </tbody>
     </table>
         
+    <div class="text-center">
+        <a class="btn btn-primary show-more-contests" href="#">Show more</a>
+    </div>
 {% endblock content %}

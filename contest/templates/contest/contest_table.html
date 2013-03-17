@@ -1,0 +1,4 @@
+{% load url from future %}
+{% for contest in contest_list %}
+    <tr><td><a href="{% url 'contest' contest.id %}">{{ contest.title }}</a></td><td>{{ contest.status }}</td></tr>
+{% endfor %}
