@@ -4,6 +4,8 @@ from models import Contest, Submission, Vote
 from django.contrib.auth.models import User
 
 import soundcloud
+from lxml.html.clean import clean_html
+
 
 class SubmissionForm(forms.ModelForm):
     class Meta:
@@ -79,4 +81,9 @@ class ContestForm(forms.ModelForm):
         model = Contest
         fields = {'title', 'description'}
     close = forms.BooleanField(required=False)
+
+    def clean(self):
+        cleaned_data = super(ContestForm, self).clean()
+        cleaned_data['description'] = clean_html(cleaned_data.get('description'))
+        return cleaned_data
 
