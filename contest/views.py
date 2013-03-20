@@ -35,10 +35,10 @@ def contest(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)
     sc_client = soundcloud.Client(client_id='296ab7d5973f378289cc72d56dc8eded')
 
-    if not request.user.is_authenticated():
-        return render(request, 'contest/contest.html', {'contest': contest})
-
     if contest.is_submission_open():
+        if not request.user.is_authenticated():
+            return render(request, 'contest/contest.html', {'contest': contest})
+
         # get existing submission for user if there is one
         submissions = Submission.objects.filter(contest=contest, author=request.user)
         existing_submission = submissions[0] if submissions else None
@@ -84,6 +84,9 @@ def contest(request, contest_id):
                     'success': submission_success})
 
     elif contest.is_voting_open():
+        if not request.user.is_authenticated():
+            return render(request, 'contest/contest.html', {'contest': contest})
+
         if request.method == 'POST':
             form = forms.VoteForm(request.POST)
             if form.is_valid():
