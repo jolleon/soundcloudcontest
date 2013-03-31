@@ -1,5 +1,6 @@
 {% extends "contest/base.html" %}
 {% load url from future %}
+{% load contest_tags %}
 
 {% block content %}
 <style type="text/css">
@@ -39,15 +40,19 @@
 
 <form method="post" action="{% url 'django.contrib.auth.views.login' %}" class="form-signin">
 <h2 class="form-signin-heading">Please sign in</h2>
-Or <a href="{% url 'signin' %}">create an account</a>.
 {% if form.errors %}
 <p class="text-error">Your username and password didn't match. Please try again.</p>
 {% endif %}
 {% csrf_token %}
     <input type="text" name="{{ form.username.html_name }}" id="{{ form.username.auto_id }}" class="input-block-level" placeholder="{{ form.username.label }}">
     <input type="password" name="{{ form.password.html_name }}" id="{{ form.password.auto_id }}" class="input-block-level" placeholder="{{ form.password.label }}">
-    <button class="btn btn-large btn-primary" type="submit">Sign in</button>
+    <button class="btn btn-primary" type="submit">Sign in</button>
+    or <a href="{% url 'signin' %}">create an account</a>.
     <input type="hidden" name="next" value="{{ next }}" />
+    <div class="text-center">
+        <p>-- or --</p>
+        {% sc_connect %}
+    </div>
 </form>
 
 {% endblock %}

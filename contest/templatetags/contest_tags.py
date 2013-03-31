@@ -1,4 +1,6 @@
-from django import template 
+from django import template
+
+from contest import util
 
 register = template.Library()
 
@@ -31,3 +33,9 @@ def sc_widget(sc_url):
 
     full_url = base_url + '?' + '&amp;'.join([key + '=' + value for (key, value) in params.iteritems()])
     return {'height': height, 'type': 'flash', 'widget_url': full_url}
+
+
+@register.inclusion_tag('contest/sc_connect.html')
+def sc_connect():
+    sc_client = util.get_soundcloud_client()
+    return {'url': sc_client.authorize_url()}

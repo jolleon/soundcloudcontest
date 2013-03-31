@@ -64,3 +64,22 @@ class Vote(models.Model):
 
     def contest(self):
         return self.submission.contest
+
+
+class SoundcloudUser(models.Model):
+    # tie to Django user
+    user = models.OneToOneField(User)
+
+    access_token = models.CharField(max_length=200)
+
+    # data from Soundcloud
+    sc_id = models.IntegerField()
+    username = models.CharField(max_length=200)
+    permalink_url = models.URLField()
+    uri = models.URLField()
+    city = models.CharField(max_length=200)
+    country = models.CharField(max_length=200)
+    avatar_url = models.URLField()
+
+    def __unicode__(self):
+        return self.username

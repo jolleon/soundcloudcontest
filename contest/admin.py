@@ -1,5 +1,5 @@
 from django.contrib import admin
-from contest.models import User, Contest, Submission, Vote
+from contest.models import User, Contest, Submission, Vote, SoundcloudUser
 
 
 class ContestAdmin(admin.ModelAdmin):
@@ -15,3 +15,5 @@ admin.site.register(Submission, SubmissionAdmin)
 class VoteAdmin(admin.ModelAdmin):
     list_display = ('voter', 'contest', 'submission', 'score')
 admin.site.register(Vote, VoteAdmin)
+
+admin.site.register(SoundcloudUser)

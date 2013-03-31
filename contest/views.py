@@ -6,10 +6,15 @@ from django.contrib.auth.models import User
 from django.core import urlresolvers
 from django.utils import timezone
 
+import logging
+
+logger = logging.getLogger('main')
+
 import soundcloud
 
 import json
 
+import util
 import forms
 from contest.models import Contest
 from contest.models import Submission
@@ -33,7 +38,6 @@ def contests(request):
 
 def contest(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)
-    sc_client = soundcloud.Client(client_id='296ab7d5973f378289cc72d56dc8eded')
 
     if contest.is_submission_open():
         if not request.user.is_authenticated():
@@ -121,7 +125,7 @@ def contest(request, contest_id):
                 {'contest': contest, 'submissions': submissions})
 
 
-    else:
+    else: #results
         submissions = Submission.objects.filter(contest=contest)
         for submission in submissions:
             votes = Vote.objects.filter(submission=submission)
@@ -152,12 +156,30 @@ def signin(request):
             password = user.password
             user.set_password(user.password) # need that to hash it
             user.save()
+            # login user immediately
             auth_user = authenticate(username=user.username, password=password)
             if auth_user is not None:
                 login(request, auth_user)
             return redirect('/')
         else:
             return render(request, 'contest/signin.html', {'form': form})
+
+
+def soundcloud_signin(request):
+    logger.error("in signin")
+    code = request.GET['code']
+    if not code:
+        # TODO: something
+        return redirect('/')
+    auth_user = authenticate(code=code)
+    if auth_user is not None:
+        login(request, auth_user)
+        return redirect('/')
+    else:
+        # TODO: something
+        return redirect('login')
+
+
 
 
 @login_required

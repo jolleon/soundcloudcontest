@@ -11,7 +11,7 @@
         <p><a href="{{ submission.sc_url }}">{{ submission.title }}</a>
         by
         <a href="{{ submission.user_link }}">{{ submission.username }}</a>
-        <small class="muted">(posted by {{ submission.author }})</small></p>
+        <small class="muted">(posted by {{ submission.author.get_full_name }})</small></p>
             {% sc_widget submission.sc_url %}
     </td><td>
         <table class="table-condensed">

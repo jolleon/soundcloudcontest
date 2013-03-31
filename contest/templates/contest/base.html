@@ -37,7 +37,7 @@
           <div class="nav-collapse collapse">
             {% if user.is_authenticated %}
             <ul class="nav pull-right">
-              <li class="nav"><a href="{% url 'profile' %}">{{ user.username }}</a></li>
+              <li class="nav"><a href="{% url 'profile' %}">{{ user.get_full_name }}</a></li>
               <li><a href="/logout" class="navbar-link">logout</a></li>
             </ul>
             {% else %}
@@ -73,6 +73,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
 
     <script src="http://malsup.github.com/jquery.form.js"></script>
+    <script src="http://connect.soundcloud.com/sdk.js"></script>
 
     <script src="{% static "contest/js/site.js" %}"></script>
 
