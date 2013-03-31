@@ -7,7 +7,7 @@
     <a class="pull-right" href="{% url 'edit' contest.id %}">edit</a>
     {% endif %}
 <h2>{{ contest.title }}</h2>
-<small class="muted">by {{ contest.admin }}</small>
+<small class="muted">by {{ contest.admin.get_full_name }}</small>
 {% autoescape off %}
 <p>{{ contest.description }}</p>
 {% endautoescape %}
