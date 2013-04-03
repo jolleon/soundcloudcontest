@@ -1,7 +1,24 @@
 {% extends "contest/base.html" %}
 {% load url from future %}
+{% load contest_tags %}
 
 {% block content %}
+    <div class="hero-unit">
+        {% if user.is_authenticated %}
+            <h3>Welcome, {{ user.get_full_name }}!</h3>
+            <p>Participate in one of the contests below,
+            <a href="{% url "edit" 0 %}">create your own</a>
+            or <a href="{% url "profile" %}">see your past contributions</a>
+            </p>
+        {% else %}
+            <h3>Welcome to SoundcloudContest!</h2>
+            <p>Please <a href="{% url "login" %}">login</a> if you would like
+            to participate in a contest or create your own.</p>
+            <p>Sign in in just one click if you already have a
+            Soundcloud account!</p>
+            {% sc_connect %}
+        {% endif %}
+    </div>
     <h3>All Contests</h3>
     <table class="table table-striped table-hover contests">
         <thead><tr><th>Title</th><th>Status</th><th>Last Update</th></tr></thead>
