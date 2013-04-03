@@ -40,7 +40,7 @@ User.add_to_class('submissions', count_objects(Submission, 'author'))
 User.add_to_class('votes', count_objects(Vote, 'voter'))
 
 UserAdmin.list_display = ('username', 'first_name', 'soundclouduser', 'email', 'contests',
-    'submissions', 'votes', 'is_staff')
+    'submissions', 'votes', 'last_login', 'is_staff')
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
