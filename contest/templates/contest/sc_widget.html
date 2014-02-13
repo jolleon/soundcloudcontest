@@ -6,4 +6,6 @@
         type="application/x-shockwave-flash"
         width="100%" height="{{ height }}"></embed>
 </object>
+{% else %}
+<iframe width="100%" height="{{ height }}" scrolling="no" frameborder="no" src="{{ widget_url }}"></iframe>
 {% endif %}

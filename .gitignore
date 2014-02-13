@@ -1,4 +1,4 @@
 envsccontest
 *.pyc
-*.swp
+*.sw[pon]
 /static
